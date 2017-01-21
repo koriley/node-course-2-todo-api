@@ -4,7 +4,7 @@ const request = require('supertest');
 const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
 
-//this is creating an array to populate the database for GET testing
+//this seedin an array to populate the database for GET testing
 const todos = [{
   text: 'first test todo'
 },{
@@ -14,7 +14,7 @@ const todos = [{
 //this errases all data in the todos data base for POST testing
 beforeEach((done) =>{
   Todo.remove({}).then(()=>{
-    return Todo.insertMany(todos);
+    return Todo.insertMany(todos); //we insert the seeded array
   }).then(() => done());
 });
 
@@ -60,7 +60,9 @@ describe('POST /todos', () => {
     });
     });
   });
-
+  
+//getting all the todos in the data base
+//we seed this above with two fields so length should be 2
   describe('GET /todos', ()=> {
     it('should return todos from the database', (done)=>{
 
