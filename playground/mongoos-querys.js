@@ -36,7 +36,7 @@ var id = "58839e9f2e247b04e1a65e29";
 
 User.findById(id).then((user)=>{
   if(!user){
-    console.log("No user found");
+    return console.log("No user found");
   }
   console.log(JSON.stringify(user, undefined, 2));
 }).catch((e)=> console.log(e));
