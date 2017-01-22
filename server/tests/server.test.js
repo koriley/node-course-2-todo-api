@@ -1,13 +1,15 @@
 const expect = require('expect');
 const request = require('supertest');
-
+const {ObjectID} = require("mongodb");
 const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
 
 //this seedin an array to populate the database for GET testing
 const todos = [{
+  _id: new ObjectID(),
   text: 'first test todo'
 },{
+  _id: new ObjectID(),
   text: 'Second test todo'
 }];
 
@@ -60,7 +62,7 @@ describe('POST /todos', () => {
     });
     });
   });
-  
+
 //getting all the todos in the data base
 //we seed this above with two fields so length should be 2
   describe('GET /todos', ()=> {
@@ -74,4 +76,33 @@ describe('POST /todos', () => {
       })
       .end(done);
     });
+  });
+
+  describe('GET /todos/:id', ()=>{
+    it("Should check and get object from /todos/id.", (done)=>{
+        request(app)
+        .get(`/todos/${todos[0]._id.toHexString()}`)
+        .expect(200)
+        .expect((res)=>{
+          expect(res.body.foundTodo.text).toBe(todos[0].text)
+        })
+        .end(done);
+    });
+      it('should return 404 if todo not found', (done)=>{
+        var hexId = new ObjectID();
+        request(app)
+        .get(`/todos/${hexId.toHexString()}`)
+        .expect(404)
+        .end(done)
+      });
+
+      it('should return 404 for non-object ids', (done)=>{
+
+        request(app)
+        .get(`/todos/123`)
+        .expect(404)
+        .end(done)
+      });
+
+
   });
